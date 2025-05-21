@@ -380,10 +380,10 @@ const DonationForm = ({ form, onSubmit, isSubmitting }: DonationFormProps) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="category"
+                name="project"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-700 font-medium">Fund/Category</FormLabel>
+                    <FormLabel className="text-slate-700 font-medium">Fund/Project</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -437,10 +437,10 @@ const DonationForm = ({ form, onSubmit, isSubmitting }: DonationFormProps) => {
 
             <FormField
               control={form.control}
-              name="memo"
+              name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-slate-700 font-medium">Memo (Optional)</FormLabel>
+                  <FormLabel className="text-slate-700 font-medium">Notes (Optional)</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
