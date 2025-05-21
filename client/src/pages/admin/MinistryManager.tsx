@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,14 +37,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, Pencil, Trash2 } from "lucide-react";
+import { PlusCircle, Pencil, Trash2, Users, Clock } from "lucide-react";
 
 // Extended schema with validation
 const ministryFormSchema = z.object({
   title: z.string().min(2, { message: "Title is required" }),
   description: z.string().min(10, { message: "Description must be at least 10 characters" }),
-  imageUrl: z.string().optional(),
-  schedule: z.string().optional(),
+  imageUrl: z.string().url({ message: "Must be a valid URL" }).nullable().optional(),
+  schedule: z.string().nullable().optional(),
 });
 
 type MinistryForm = z.infer<typeof ministryFormSchema>;
@@ -172,8 +173,8 @@ const MinistryManager = () => {
     editForm.reset({
       title: ministry.title,
       description: ministry.description,
-      imageUrl: ministry.imageUrl || "",
-      schedule: ministry.schedule || "",
+      imageUrl: ministry.imageUrl,
+      schedule: ministry.schedule,
     });
     setIsEditDialogOpen(true);
   };
@@ -187,6 +188,12 @@ const MinistryManager = () => {
     if (selectedMinistry) {
       deleteMinistryMutation.mutate(selectedMinistry.id);
     }
+  };
+
+  // Helper to truncate long descriptions
+  const truncateDescription = (text: string, maxLength = 200) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
   };
 
   return (
@@ -206,24 +213,46 @@ const MinistryManager = () => {
             Add New Ministry
           </Button>
         </div>
+        
+        {/* Ministry statistics */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-500">Total Ministries</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {isLoading ? <Skeleton className="h-9 w-12" /> : ministries?.length || 0}
+                  </p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                  <Users className="h-6 w-6 text-purple-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Ministry List */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Ministries List */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             // Loading skeletons
-            Array(4).fill(0).map((_, i) => (
+            Array(6).fill(0).map((_, i) => (
               <Card key={i} className="overflow-hidden">
-                <CardHeader className="pb-0">
+                <div className="aspect-video bg-slate-100">
+                  <Skeleton className="h-full w-full" />
+                </div>
+                <CardHeader className="pb-2">
                   <Skeleton className="h-6 w-3/4 mb-2" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-24 w-full mb-4" />
                   <Skeleton className="h-4 w-1/2" />
+                </CardHeader>
+                <CardContent className="pb-3">
+                  <Skeleton className="h-24 w-full" />
                 </CardContent>
               </Card>
             ))
           ) : !ministries || ministries.length === 0 ? (
-            <div className="col-span-2 text-center py-12">
+            <div className="col-span-full text-center py-12">
               <p className="text-slate-500 mb-4">No ministries found</p>
               <Button 
                 variant="outline" 
@@ -234,39 +263,54 @@ const MinistryManager = () => {
             </div>
           ) : (
             ministries.map(ministry => (
-              <Card key={ministry.id} className="overflow-hidden">
-                <CardHeader>
-                  <CardTitle>{ministry.title}</CardTitle>
+              <Card key={ministry.id} className="overflow-hidden flex flex-col">
+                <div className="aspect-video bg-slate-100 relative overflow-hidden">
+                  {ministry.imageUrl ? (
+                    <img 
+                      src={ministry.imageUrl} 
+                      alt={ministry.title} 
+                      className="h-full w-full object-cover transition-transform hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=Ministry";
+                      }}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-slate-400">
+                      <Users className="h-12 w-12 mb-2" />
+                      <p className="text-sm">No image</p>
+                    </div>
+                  )}
+                </div>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl">{ministry.title}</CardTitle>
                   {ministry.schedule && (
-                    <CardDescription>
-                      Schedule: {ministry.schedule}
+                    <CardDescription className="flex items-center">
+                      <Clock className="h-3 w-3 mr-1" />
+                      {ministry.schedule}
                     </CardDescription>
                   )}
                 </CardHeader>
-                <CardContent>
-                  <p className="text-slate-700 mb-4 line-clamp-3">{ministry.description}</p>
-                  {ministry.imageUrl && (
-                    <div className="aspect-video overflow-hidden rounded-md bg-slate-100 mt-2">
-                      <img 
-                        src={ministry.imageUrl} 
-                        alt={ministry.title} 
-                        className="h-full w-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=Ministry+Image";
-                        }}
-                      />
-                    </div>
-                  )}
+                <CardContent className="pb-3 flex-grow">
+                  <p className="text-sm text-slate-600">
+                    {truncateDescription(ministry.description)}
+                  </p>
                 </CardContent>
-                <CardFooter className="border-t bg-slate-50 flex justify-end space-x-2 p-2">
-                  <Button variant="ghost" size="sm" onClick={() => handleEdit(ministry)}>
-                    <Pencil className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(ministry)}>
-                    <Trash2 className="h-4 w-4 mr-1" />
-                    Delete
-                  </Button>
+                <CardFooter className="border-t bg-slate-50 p-2 mt-auto">
+                  <div className="flex space-x-2 w-full justify-end">
+                    <Button variant="ghost" size="sm" onClick={() => handleEdit(ministry)}>
+                      <Pencil className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleDelete(ministry)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
             ))
@@ -279,7 +323,7 @@ const MinistryManager = () => {
             <DialogHeader>
               <DialogTitle>Add New Ministry</DialogTitle>
               <DialogDescription>
-                Create a new ministry for the church.
+                Create a new ministry area for the church website.
               </DialogDescription>
             </DialogHeader>
             
@@ -290,9 +334,9 @@ const MinistryManager = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ministry Title</FormLabel>
+                      <FormLabel>Ministry Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Enter ministry title" />
+                        <Input {...field} placeholder="Enter ministry name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -309,9 +353,12 @@ const MinistryManager = () => {
                         <Textarea 
                           {...field} 
                           placeholder="Ministry description" 
-                          rows={4}
+                          rows={5}
                         />
                       </FormControl>
+                      <FormDescription>
+                        Describe what this ministry does, who it's for, and how to get involved.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -324,8 +371,16 @@ const MinistryManager = () => {
                     <FormItem>
                       <FormLabel>Meeting Schedule (Optional)</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="E.g., Sundays at 9:30 AM" />
+                        <Input 
+                          {...field} 
+                          placeholder="e.g., Sundays at 9:30 AM" 
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
                       </FormControl>
+                      <FormDescription>
+                        When does this ministry typically meet?
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -338,8 +393,16 @@ const MinistryManager = () => {
                     <FormItem>
                       <FormLabel>Image URL (Optional)</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="URL for ministry image" />
+                        <Input 
+                          {...field} 
+                          placeholder="URL for ministry image" 
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
                       </FormControl>
+                      <FormDescription>
+                        A photo representing this ministry
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -368,7 +431,7 @@ const MinistryManager = () => {
             <DialogHeader>
               <DialogTitle>Edit Ministry</DialogTitle>
               <DialogDescription>
-                Update the ministry details.
+                Update ministry details for {selectedMinistry?.title}
               </DialogDescription>
             </DialogHeader>
             
@@ -379,9 +442,9 @@ const MinistryManager = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ministry Title</FormLabel>
+                      <FormLabel>Ministry Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Enter ministry title" />
+                        <Input {...field} placeholder="Enter ministry name" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -398,9 +461,12 @@ const MinistryManager = () => {
                         <Textarea 
                           {...field} 
                           placeholder="Ministry description" 
-                          rows={4}
+                          rows={5}
                         />
                       </FormControl>
+                      <FormDescription>
+                        Describe what this ministry does, who it's for, and how to get involved.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -413,8 +479,16 @@ const MinistryManager = () => {
                     <FormItem>
                       <FormLabel>Meeting Schedule (Optional)</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="E.g., Sundays at 9:30 AM" />
+                        <Input 
+                          {...field} 
+                          placeholder="e.g., Sundays at 9:30 AM" 
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
                       </FormControl>
+                      <FormDescription>
+                        When does this ministry typically meet?
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -427,8 +501,16 @@ const MinistryManager = () => {
                     <FormItem>
                       <FormLabel>Image URL (Optional)</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="URL for ministry image" />
+                        <Input 
+                          {...field} 
+                          placeholder="URL for ministry image" 
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value || null)}
+                        />
                       </FormControl>
+                      <FormDescription>
+                        A photo representing this ministry
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

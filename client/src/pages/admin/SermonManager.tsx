@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,20 +38,40 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, PlusCircle, Pencil, Trash2, PlayCircle, FileText, FileAudio } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { CalendarIcon, PlusCircle, Pencil, Trash2, Video, FileText, PlayCircle, Headphones } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+
+// Sermon topic/categories
+const sermonTopics = [
+  "faith",
+  "prayer",
+  "worship",
+  "family",
+  "relationships",
+  "discipleship",
+  "evangelism",
+  "leadership",
+  "holy-spirit",
+  "salvation",
+  "missions",
+  "biblical-studies",
+  "special-events",
+  "testimonies",
+  "other"
+];
 
 // Extended schema with validation
 const sermonFormSchema = z.object({
   title: z.string().min(2, { message: "Title is required" }),
-  description: z.string().optional(),
+  description: z.string().min(10, { message: "Description must be at least 10 characters" }).nullable().optional(),
   speaker: z.string().min(2, { message: "Speaker name is required" }),
-  date: z.date({ required_error: "Date is required" }),
-  topic: z.string().optional(),
-  videoUrl: z.string().optional(),
-  audioUrl: z.string().optional(),
-  notesUrl: z.string().optional(),
-  thumbnailUrl: z.string().optional(),
+  date: z.date({ required_error: "Please select a date" }),
+  topic: z.string().min(1, { message: "Topic is required" }).nullable().optional(),
+  videoUrl: z.string().url({ message: "Must be a valid URL" }).nullable().optional(),
+  audioUrl: z.string().url({ message: "Must be a valid URL" }).nullable().optional(),
+  notesUrl: z.string().url({ message: "Must be a valid URL" }).nullable().optional(),
+  thumbnailUrl: z.string().url({ message: "Must be a valid URL" }).nullable().optional(),
 });
 
 type SermonForm = z.infer<typeof sermonFormSchema>;
@@ -188,14 +209,14 @@ const SermonManager = () => {
     setSelectedSermon(sermon);
     editForm.reset({
       title: sermon.title,
-      description: sermon.description || "",
+      description: sermon.description,
       speaker: sermon.speaker,
       date: new Date(sermon.date),
-      topic: sermon.topic || "",
-      videoUrl: sermon.videoUrl || "",
-      audioUrl: sermon.audioUrl || "",
-      notesUrl: sermon.notesUrl || "",
-      thumbnailUrl: sermon.thumbnailUrl || "",
+      topic: sermon.topic,
+      videoUrl: sermon.videoUrl,
+      audioUrl: sermon.audioUrl,
+      notesUrl: sermon.notesUrl,
+      thumbnailUrl: sermon.thumbnailUrl,
     });
     setIsEditDialogOpen(true);
   };
@@ -209,6 +230,11 @@ const SermonManager = () => {
     if (selectedSermon) {
       deleteSermonMutation.mutate(selectedSermon.id);
     }
+  };
+
+  // Check if sermon has media
+  const hasMedia = (sermon: Sermon): boolean => {
+    return !!(sermon.videoUrl || sermon.audioUrl || sermon.notesUrl);
   };
 
   return (
@@ -228,29 +254,86 @@ const SermonManager = () => {
             Add New Sermon
           </Button>
         </div>
+        
+        {/* Sermon statistics */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-500">Total Sermons</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {isLoading ? <Skeleton className="h-9 w-12" /> : sermons?.length || 0}
+                  </p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
+                  <PlayCircle className="h-6 w-6 text-purple-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-500">With Video</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {isLoading ? (
+                      <Skeleton className="h-9 w-12" />
+                    ) : (
+                      sermons?.filter(sermon => sermon.videoUrl).length || 0
+                    )}
+                  </p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+                  <Video className="h-6 w-6 text-red-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-500">With Audio</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {isLoading ? (
+                      <Skeleton className="h-9 w-12" />
+                    ) : (
+                      sermons?.filter(sermon => sermon.audioUrl).length || 0
+                    )}
+                  </p>
+                </div>
+                <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                  <Headphones className="h-6 w-6 text-blue-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Sermon List */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             // Loading skeletons
-            Array(4).fill(0).map((_, i) => (
+            Array(6).fill(0).map((_, i) => (
               <Card key={i} className="overflow-hidden">
-                <CardHeader className="pb-0">
+                <div className="aspect-video bg-slate-100">
+                  <Skeleton className="h-full w-full" />
+                </div>
+                <CardHeader className="pb-2">
                   <Skeleton className="h-6 w-3/4 mb-2" />
                   <Skeleton className="h-4 w-1/2" />
                 </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-16 w-full mb-4" />
-                  <div className="flex space-x-2">
-                    <Skeleton className="h-4 w-12" />
-                    <Skeleton className="h-4 w-12" />
-                    <Skeleton className="h-4 w-12" />
-                  </div>
+                <CardContent className="pb-3">
+                  <Skeleton className="h-16 w-full" />
                 </CardContent>
               </Card>
             ))
           ) : !sermons || sermons.length === 0 ? (
-            <div className="col-span-2 text-center py-12">
+            <div className="col-span-full text-center py-12">
               <p className="text-slate-500 mb-4">No sermons found</p>
               <Button 
                 variant="outline" 
@@ -261,72 +344,94 @@ const SermonManager = () => {
             </div>
           ) : (
             sermons.map(sermon => (
-              <Card key={sermon.id} className="overflow-hidden">
-                <CardHeader>
+              <Card key={sermon.id} className="overflow-hidden flex flex-col">
+                <div className="aspect-video bg-slate-100 flex items-center justify-center relative">
+                  {sermon.thumbnailUrl ? (
+                    <img 
+                      src={sermon.thumbnailUrl} 
+                      alt={sermon.title} 
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "https://placehold.co/600x400?text=Sermon";
+                      }}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-slate-400">
+                      <PlayCircle className="h-12 w-12 mb-2" />
+                      <p className="text-sm">No thumbnail</p>
+                    </div>
+                  )}
+                  {sermon.videoUrl && (
+                    <a 
+                      href={sermon.videoUrl} 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity"
+                    >
+                      <div className="bg-white rounded-full p-3">
+                        <PlayCircle className="h-8 w-8 text-purple-600" />
+                      </div>
+                    </a>
+                  )}
+                </div>
+                <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="line-clamp-1">{sermon.title}</CardTitle>
+                      <CardTitle className="text-lg">{sermon.title}</CardTitle>
                       <CardDescription>
-                        {formatDate(sermon.date)} • {sermon.speaker}
+                        {sermon.speaker} • {formatDate(sermon.date)}
                       </CardDescription>
                     </div>
                     {sermon.topic && (
-                      <span className="inline-block px-2 py-1 bg-slate-100 text-slate-800 text-xs rounded-full">
-                        {sermon.topic}
-                      </span>
+                      <Badge variant="outline" className="capitalize">
+                        {sermon.topic.replace('-', ' ')}
+                      </Badge>
                     )}
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pb-3 flex-grow">
                   {sermon.description && (
-                    <p className="text-slate-700 mb-4 line-clamp-2">{sermon.description}</p>
+                    <p className="text-sm text-slate-600 line-clamp-3">
+                      {sermon.description}
+                    </p>
                   )}
-                  
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mt-3">
                     {sermon.videoUrl && (
-                      <a 
-                        href={sermon.videoUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-2 py-1 bg-red-50 text-red-600 text-xs rounded hover:bg-red-100"
-                      >
-                        <PlayCircle className="h-3 w-3 mr-1" />
+                      <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
+                        <Video className="h-3 w-3 mr-1" />
                         Video
-                      </a>
+                      </Badge>
                     )}
                     {sermon.audioUrl && (
-                      <a 
-                        href={sermon.audioUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded hover:bg-blue-100"
-                      >
-                        <FileAudio className="h-3 w-3 mr-1" />
+                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                        <Headphones className="h-3 w-3 mr-1" />
                         Audio
-                      </a>
+                      </Badge>
                     )}
                     {sermon.notesUrl && (
-                      <a 
-                        href={sermon.notesUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-2 py-1 bg-green-50 text-green-600 text-xs rounded hover:bg-green-100"
-                      >
+                      <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
                         <FileText className="h-3 w-3 mr-1" />
                         Notes
-                      </a>
+                      </Badge>
                     )}
                   </div>
                 </CardContent>
-                <CardFooter className="border-t bg-slate-50 flex justify-end space-x-2 p-2">
-                  <Button variant="ghost" size="sm" onClick={() => handleEdit(sermon)}>
-                    <Pencil className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                  <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50" onClick={() => handleDelete(sermon)}>
-                    <Trash2 className="h-4 w-4 mr-1" />
-                    Delete
-                  </Button>
+                <CardFooter className="border-t bg-slate-50 p-2 mt-auto">
+                  <div className="flex space-x-2 w-full justify-end">
+                    <Button variant="ghost" size="sm" onClick={() => handleEdit(sermon)}>
+                      <Pencil className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleDelete(sermon)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
             ))
@@ -339,7 +444,7 @@ const SermonManager = () => {
             <DialogHeader>
               <DialogTitle>Add New Sermon</DialogTitle>
               <DialogDescription>
-                Add a new sermon with details and media links.
+                Create a new sermon recording or message for the church website.
               </DialogDescription>
             </DialogHeader>
             
@@ -367,7 +472,7 @@ const SermonManager = () => {
                       <FormItem>
                         <FormLabel>Speaker</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Speaker name" />
+                          <Input {...field} placeholder="Pastor's name" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -379,14 +484,15 @@ const SermonManager = () => {
                     name="date"
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>Date</FormLabel>
+                        <FormLabel>Sermon Date</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
                                 variant={"outline"}
                                 className={
-                                  "w-full pl-3 text-left font-normal"
+                                  "w-full pl-3 text-left font-normal " +
+                                  (!field.value && "text-muted-foreground")
                                 }
                               >
                                 {field.value ? (
@@ -403,6 +509,7 @@ const SermonManager = () => {
                               mode="single"
                               selected={field.value}
                               onSelect={field.onChange}
+                              disabled={(date) => date > new Date()}
                               initialFocus
                             />
                           </PopoverContent>
@@ -418,11 +525,13 @@ const SermonManager = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea 
                           {...field} 
-                          placeholder="Sermon description" 
+                          placeholder="Brief description of the sermon" 
+                          value={field.value || ""}
+                          onChange={event => field.onChange(event.target.value || null)}
                           rows={3}
                         />
                       </FormControl>
@@ -436,73 +545,105 @@ const SermonManager = () => {
                   name="topic"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Topic/Category (Optional)</FormLabel>
+                      <FormLabel>Topic/Category</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="E.g., Faith, Prayer, Love" />
+                        <select
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          value={field.value || ""}
+                          onChange={event => field.onChange(event.target.value || null)}
+                        >
+                          <option value="">Select a topic</option>
+                          {sermonTopics.map((topic) => (
+                            <option key={topic} value={topic}>
+                              {topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}
+                            </option>
+                          ))}
+                        </select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={addForm.control}
-                    name="videoUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Video URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon video" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Media Links</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={addForm.control}
+                      name="videoUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Video URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="YouTube or Vimeo link" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={addForm.control}
-                    name="audioUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Audio URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon audio" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                    <FormField
+                      control={addForm.control}
+                      name="audioUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Audio URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="Audio file link" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={addForm.control}
-                    name="notesUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Notes URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon notes" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={addForm.control}
+                      name="notesUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Notes URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="PDF or document link" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={addForm.control}
-                    name="thumbnailUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Thumbnail URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon thumbnail" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={addForm.control}
+                      name="thumbnailUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Thumbnail URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="Image URL" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
                 <DialogFooter>
@@ -556,7 +697,7 @@ const SermonManager = () => {
                       <FormItem>
                         <FormLabel>Speaker</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Speaker name" />
+                          <Input {...field} placeholder="Pastor's name" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -568,14 +709,15 @@ const SermonManager = () => {
                     name="date"
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>Date</FormLabel>
+                        <FormLabel>Sermon Date</FormLabel>
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
                                 variant={"outline"}
                                 className={
-                                  "w-full pl-3 text-left font-normal"
+                                  "w-full pl-3 text-left font-normal " +
+                                  (!field.value && "text-muted-foreground")
                                 }
                               >
                                 {field.value ? (
@@ -592,6 +734,7 @@ const SermonManager = () => {
                               mode="single"
                               selected={field.value}
                               onSelect={field.onChange}
+                              disabled={(date) => date > new Date()}
                               initialFocus
                             />
                           </PopoverContent>
@@ -607,11 +750,13 @@ const SermonManager = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
                         <Textarea 
                           {...field} 
-                          placeholder="Sermon description" 
+                          placeholder="Brief description of the sermon" 
+                          value={field.value || ""}
+                          onChange={event => field.onChange(event.target.value || null)}
                           rows={3}
                         />
                       </FormControl>
@@ -625,73 +770,105 @@ const SermonManager = () => {
                   name="topic"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Topic/Category (Optional)</FormLabel>
+                      <FormLabel>Topic/Category</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="E.g., Faith, Prayer, Love" />
+                        <select
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          value={field.value || ""}
+                          onChange={event => field.onChange(event.target.value || null)}
+                        >
+                          <option value="">Select a topic</option>
+                          {sermonTopics.map((topic) => (
+                            <option key={topic} value={topic}>
+                              {topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}
+                            </option>
+                          ))}
+                        </select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={editForm.control}
-                    name="videoUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Video URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon video" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium">Media Links</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={editForm.control}
+                      name="videoUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Video URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="YouTube or Vimeo link" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={editForm.control}
-                    name="audioUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Audio URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon audio" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                    <FormField
+                      control={editForm.control}
+                      name="audioUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Audio URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="Audio file link" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={editForm.control}
-                    name="notesUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Notes URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon notes" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={editForm.control}
+                      name="notesUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Notes URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="PDF or document link" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={editForm.control}
-                    name="thumbnailUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Thumbnail URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Link to sermon thumbnail" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    <FormField
+                      control={editForm.control}
+                      name="thumbnailUrl"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Thumbnail URL</FormLabel>
+                          <FormControl>
+                            <Input 
+                              {...field} 
+                              placeholder="Image URL" 
+                              value={field.value || ""}
+                              onChange={event => field.onChange(event.target.value || null)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
 
                 <DialogFooter>
