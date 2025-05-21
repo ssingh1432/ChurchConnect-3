@@ -1,0 +1,66 @@
+Generate a full-stack, scalable Church Website App using **Next.js (App Router) with TypeScript**, **MySQL**, **Tailwind CSS (with slate and purple theme)**, and **Framer Motion**. The app should include **visitor authentication**, a **custom admin panel**, and full CMS capabilities.
+
+### 📄 Public Pages
+Create the following pages under `app/`:
+- **Home**: welcome banner, service schedule, upcoming events, CTA cards.
+- **About Us**: church history, leadership bios, mission/vision.
+- **Ministries**: dynamic pages for each ministry with schedules and banners.
+- **Events**: BS/AD dual calendar, list/grid toggle, filters, hover popups, date navigation, and full detail view. Fetch data from MySQL.
+- **Sermons**: video and audio library with filters by topic/date. All media hosted via Cloudinary.
+- **Blog & News**: dynamic listing of blog posts and news articles with categories.
+- **Visit Us**: service times, directions, what to expect.
+- **Contact Us**: form with validation, embedded Google Map.
+- **Prayer Requests**: secure form for prayer submissions (optional public display).
+- **Volunteer**: registration form with ministry preferences.
+- **Give/Donate**: donation via PayPal, Google Pay, Esewa, and direct bank transfer (with form-based bank info). Users can choose one-time or recurring donations.
+
+### 👤 Visitor Features
+- **Registration & Login** with hashed password storage (e.g., bcrypt).
+- After login, visitors have access to their **profile page**, can edit their info, submit prayer requests, and view their own submissions.
+- Visitors **cannot access admin routes**.
+
+### 🔐 Admin Panel (`/adminpanel`)
+- Protected route accessible only to users with role `admin`.
+- Default admin: `shahidsingh1432@gmail.com`.
+- Admin dashboard includes full **CMS capability**:
+  - **Event Manager**: CRUD operations on events with BS/AD support.
+  - **Ministry Manager**: Add/edit/delete ministries.
+  - **Sermon Manager**: Upload and manage sermons (video/audio via Cloudinary).
+  - **Blog/News Manager**: CRUD operations for blog/news posts with images.
+  - **User Manager**: View registered users. Promote users to `admin`.
+  - **Prayer Requests Manager**: View, reply, mark answered.
+  - **Volunteer Manager**: View, approve, and assign volunteers.
+  - **Media Manager**: Upload images/videos to Cloudinary and reuse via URLs.
+  - **Donation Manager**: View donation logs, export data.
+  - **Site Content Editor**: Edit homepage texts, about section, contact info, etc.
+
+### ⚙️ Tech Stack & Features
+- **Next.js App Router + TypeScript**
+- **Tailwind CSS** with **slate and purple color theme**
+- **Framer Motion** for animations
+- **MySQL** with Prisma ORM or raw SQL
+- **Cloudinary** for all media assets (images, videos)
+- **Auth** system using credentials (JWT or NextAuth)
+- **Role-based routing middleware**: visitors (default), admin
+- **Forms** with React Hook Form and Zod validation
+- **.env config** for DB, Cloudinary, PayPal, Esewa, and GPay API keys
+- **Strict ESLint/Prettier setup**
+- **404 page**, **loading skeletons**, and **toasts** for feedback
+
+### 📂 Directory Structure
+- `app/` — all public-facing pages
+- `app/adminpanel/` — admin-only tools and CMS
+- `app/api/` — API routes for database access
+- `components/` — reusable UI elements
+- `lib/` — db, auth, cloudinary utils
+- `styles/` — global styles and Tailwind config
+- `public/` — static assets
+
+### 📋 Additional Notes
+- Ensure all content in the app (text, media, lists) is **editable** via admin panel.
+- Visitors can only access their profile and public content.
+- Use Tailwind’s `slate` for base UI and `purple` for highlights/buttons.
+- Seed the DB with 1 admin user: `shahidsingh1432@gmail.com`.
+- Use optimistic UI updates and responsive layout.
+
+Generate the file structure, sample schema (Prisma or SQL), and placeholder data. Focus on modularity, performance, and easy extension for future features (e.g., livestream, member portal).
