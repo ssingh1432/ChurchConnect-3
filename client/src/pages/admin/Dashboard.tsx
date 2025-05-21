@@ -393,7 +393,7 @@ const Dashboard = () => {
                   <CardTitle className="text-lg">Prayer Requests</CardTitle>
                   <CardDescription>Recent prayer needs</CardDescription>
                 </div>
-                <PrayingHands className="h-5 w-5 text-slate-500" />
+                <Scroll className="h-5 w-5 text-slate-500" />
               </div>
             </CardHeader>
             <CardContent>

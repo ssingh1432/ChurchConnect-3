@@ -1,6 +1,17 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Link, useLocation, Route, Switch } from "wouter";
+import { Link, useLocation } from "wouter";
+import Dashboard from "./Dashboard";
+import EventManager from "./EventManager";
+import MinistryManager from "./MinistryManager";
+import SermonManager from "./SermonManager";
+import BlogManager from "./BlogManager";
+import PrayerRequestManager from "./PrayerRequestManager";
+import VolunteerManager from "./VolunteerManager";
+import DonationManager from "./DonationManager";
+import SiteContentEditor from "./SiteContentEditor";
+import MediaManager from "./MediaManager";
+import UserManager from "./UserManager";
 import { 
   CalendarRange, 
   ChevronLeft, 
@@ -196,54 +207,66 @@ const AdminLayout: React.FC = () => {
         
         {/* Main content */}
         <div className="flex-1 overflow-auto">
-          <Switch>
-            <Route path="/adminpanel">
-              <div className="flex items-center justify-center h-full text-center p-8">
-                <div>
-                  <h1 className="text-3xl font-bold text-purple-600 mb-2">Welcome to the Admin Panel</h1>
-                  <p className="text-gray-600 mb-6">Select an option from the sidebar to manage your church website.</p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                    <Link href="/adminpanel/dashboard">
-                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
-                        <LayoutDashboard className="h-6 w-6 mb-2" />
-                        Dashboard
-                      </Button>
-                    </Link>
-                    <Link href="/adminpanel/events">
-                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
-                        <CalendarRange className="h-6 w-6 mb-2" />
-                        Events
-                      </Button>
-                    </Link>
-                    <Link href="/adminpanel/ministries">
-                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
-                        <Users className="h-6 w-6 mb-2" />
-                        Ministries
-                      </Button>
-                    </Link>
-                    <Link href="/adminpanel/sermons">
-                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
-                        <Headphones className="h-6 w-6 mb-2" />
-                        Sermons
-                      </Button>
-                    </Link>
-                    <Link href="/adminpanel/blog">
-                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
-                        <Newspaper className="h-6 w-6 mb-2" />
-                        Blog
-                      </Button>
-                    </Link>
-                    <Link href="/adminpanel/site-content">
-                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
-                        <FileText className="h-6 w-6 mb-2" />
-                        Site Content
-                      </Button>
-                    </Link>
-                  </div>
+          {location === "/adminpanel" ? (
+            <div className="flex items-center justify-center h-full text-center p-8">
+              <div>
+                <h1 className="text-3xl font-bold text-purple-600 mb-2">Welcome to the Admin Panel</h1>
+                <p className="text-gray-600 mb-6">Select an option from the sidebar to manage your church website.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                  <Link href="/adminpanel/dashboard">
+                    <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                      <LayoutDashboard className="h-6 w-6 mb-2" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Link href="/adminpanel/events">
+                    <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                      <CalendarRange className="h-6 w-6 mb-2" />
+                      Events
+                    </Button>
+                  </Link>
+                  <Link href="/adminpanel/ministries">
+                    <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                      <Users className="h-6 w-6 mb-2" />
+                      Ministries
+                    </Button>
+                  </Link>
+                  <Link href="/adminpanel/sermons">
+                    <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                      <Headphones className="h-6 w-6 mb-2" />
+                      Sermons
+                    </Button>
+                  </Link>
+                  <Link href="/adminpanel/blog">
+                    <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                      <Newspaper className="h-6 w-6 mb-2" />
+                      Blog
+                    </Button>
+                  </Link>
+                  <Link href="/adminpanel/site-content">
+                    <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                      <FileText className="h-6 w-6 mb-2" />
+                      Site Content
+                    </Button>
+                  </Link>
                 </div>
               </div>
-            </Route>
-          </Switch>
+            </div>
+          ) : (
+            <div className="p-6 overflow-auto">
+              {location === "/adminpanel/dashboard" && <Dashboard />}
+              {location === "/adminpanel/events" && <EventManager />}
+              {location === "/adminpanel/ministries" && <MinistryManager />}
+              {location === "/adminpanel/sermons" && <SermonManager />}
+              {location === "/adminpanel/blog" && <BlogManager />}
+              {location === "/adminpanel/prayer-requests" && <PrayerRequestManager />}
+              {location === "/adminpanel/volunteers" && <VolunteerManager />}
+              {location === "/adminpanel/donations" && <DonationManager />}
+              {location === "/adminpanel/site-content" && <SiteContentEditor />}
+              {location === "/adminpanel/media" && <MediaManager />}
+              {location === "/adminpanel/users" && <UserManager />}
+            </div>
+          )}
         </div>
       </div>
     </>
