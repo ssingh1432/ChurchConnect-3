@@ -1,47 +1,82 @@
-import { useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
-import { useLocation, Link } from "wouter";
+import { Link, useLocation, Route, Switch } from "wouter";
+import { 
+  CalendarRange, 
+  ChevronLeft, 
+  Users, 
+  UserCircle, 
+  LayoutDashboard, 
+  Headphones, 
+  Newspaper, 
+  Scroll, 
+  Heart, 
+  Image, 
+  DollarSign,
+  FileText
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { 
-  ChevronLeft, 
-  LayoutDashboard, 
-  Calendar, 
-  Users, 
-  BookOpen,
-  FileText,
-  MessageSquare,
-  HandHelping,
-  Image,
-  DollarSign,
-  Settings,
-  Menu,
-  X
-} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const AdminLayout = () => {
+const NavItem = ({ 
+  icon: Icon, 
+  label, 
+  to, 
+  currentPath 
+}: { 
+  icon: React.ElementType; 
+  label: string; 
+  to: string; 
+  currentPath: string;
+}) => {
+  const isActive = currentPath === to;
+  
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link href={to}>
+            <Button
+              variant={isActive ? "default" : "ghost"}
+              size="lg"
+              className={cn(
+                "w-full justify-start mb-1 h-12",
+                isActive ? "bg-purple-600 text-white hover:bg-purple-700" : ""
+              )}
+            >
+              <Icon className="mr-3 h-5 w-5" />
+              {label}
+            </Button>
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          {label}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
+const AdminLayout: React.FC = () => {
   const [location] = useLocation();
-  const { user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Navigation items for admin sidebar
-  const navItems = [
-    { title: "Dashboard", path: "/adminpanel/dashboard", icon: <LayoutDashboard className="mr-2 h-5 w-5" /> },
-    { title: "Events", path: "/adminpanel/events", icon: <Calendar className="mr-2 h-5 w-5" /> },
-    { title: "Ministries", path: "/adminpanel/ministries", icon: <Users className="mr-2 h-5 w-5" /> },
-    { title: "Sermons", path: "/adminpanel/sermons", icon: <BookOpen className="mr-2 h-5 w-5" /> },
-    { title: "Blog Posts", path: "/adminpanel/blog", icon: <FileText className="mr-2 h-5 w-5" /> },
-    { title: "Prayer Requests", path: "/adminpanel/prayer-requests", icon: <MessageSquare className="mr-2 h-5 w-5" /> },
-    { title: "Volunteers", path: "/adminpanel/volunteers", icon: <HandHelping className="mr-2 h-5 w-5" /> },
-    { title: "Media Assets", path: "/adminpanel/media", icon: <Image className="mr-2 h-5 w-5" /> },
-    { title: "Donations", path: "/adminpanel/donations", icon: <DollarSign className="mr-2 h-5 w-5" /> },
-    { title: "User Management", path: "/adminpanel/users", icon: <Users className="mr-2 h-5 w-5" /> },
-    { title: "Site Content", path: "/adminpanel/site-content", icon: <Settings className="mr-2 h-5 w-5" /> },
-  ];
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  const { user, logout } = useAuth();
+  
+  const getUserInitials = () => {
+    if (!user) return "GC";
+    
+    if (user.firstName && user.lastName) {
+      return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`;
+    }
+    
+    return user.username.substring(0, 2).toUpperCase();
   };
 
   return (
@@ -49,86 +84,166 @@ const AdminLayout = () => {
       <Helmet>
         <title>Admin Panel - Grace Community Church</title>
       </Helmet>
-
-      <div className="flex min-h-screen bg-slate-100">
-        {/* Mobile sidebar toggle */}
-        <div className="lg:hidden fixed top-4 left-4 z-50">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={toggleSidebar}
-            className="bg-white"
-          >
-            {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-        </div>
-
-        {/* Sidebar - desktop version is always shown, mobile is toggled */}
-        <div
-          className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-200 lg:translate-x-0 ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="flex h-16 items-center justify-center border-b px-4">
-            <h1 className="text-xl font-bold text-purple-700">Admin Dashboard</h1>
-          </div>
-          <div className="px-4 py-2">
-            <div className="mb-4 flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
-                <span className="text-sm font-medium text-purple-700">
-                  {user?.firstName?.[0] || user?.username?.[0] || "A"}
-                </span>
-              </div>
+      
+      <div className="flex h-screen bg-gray-50">
+        {/* Sidebar */}
+        <div className="w-64 bg-white shadow-lg">
+          <div className="p-6 border-b flex flex-col">
+            <div className="flex items-center mb-6">
+              <Avatar className="h-12 w-12 mr-3">
+                <AvatarImage src="/images/church-logo.png" alt="Admin" />
+                <AvatarFallback className="bg-purple-100 text-purple-800">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
               <div>
-                <p className="text-sm font-medium">
-                  {user?.firstName && user?.lastName
-                    ? `${user.firstName} ${user.lastName}`
-                    : user?.username || "Admin User"}
-                </p>
-                <p className="text-xs text-slate-500">Administrator</p>
+                <h3 className="font-medium">Admin Panel</h3>
+                <p className="text-sm text-gray-500">{user?.email}</p>
               </div>
             </div>
-            <Separator className="my-4" />
-            <div className="space-y-1">
-              {navItems.map((item) => (
-                <Link key={item.path} href={item.path}>
-                  <a
-                    className={`flex items-center rounded-md px-3 py-2 text-sm font-medium ${
-                      location === item.path
-                        ? "bg-purple-100 text-purple-700"
-                        : "text-slate-700 hover:bg-slate-100"
-                    }`}
-                  >
-                    {item.icon}
-                    {item.title}
-                  </a>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="absolute bottom-0 w-full border-t p-4">
             <Link href="/">
-              <a className="flex items-center text-sm font-medium text-slate-700 hover:text-slate-900">
-                <ChevronLeft className="mr-2 h-5 w-5" />
-                Back to Website
-              </a>
+              <Button variant="outline" size="sm" className="flex items-center justify-center">
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Return to Website
+              </Button>
             </Link>
           </div>
-        </div>
-
-        {/* Main content */}
-        <div className="flex-1 lg:ml-64">
-          <div className="p-6">
-            {/* Slot for admin page content */}
-            {location === "/adminpanel" && (
-              <div className="mt-8 text-center">
-                <h2 className="text-2xl font-bold">Welcome to the Admin Dashboard</h2>
-                <p className="mt-2 text-slate-600">
-                  Select an option from the sidebar to manage your church website.
-                </p>
-              </div>
-            )}
+          
+          <nav className="px-3 py-4">
+            <h4 className="text-xs uppercase text-gray-500 font-semibold px-3 mb-2">Dashboard</h4>
+            <NavItem 
+              icon={LayoutDashboard} 
+              label="Dashboard" 
+              to="/adminpanel/dashboard" 
+              currentPath={location} 
+            />
+            
+            <h4 className="text-xs uppercase text-gray-500 font-semibold px-3 mb-2 mt-6">Content</h4>
+            <NavItem 
+              icon={CalendarRange} 
+              label="Events" 
+              to="/adminpanel/events" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={Users} 
+              label="Ministries" 
+              to="/adminpanel/ministries" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={Headphones} 
+              label="Sermons" 
+              to="/adminpanel/sermons" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={Newspaper} 
+              label="Blog Posts" 
+              to="/adminpanel/blog" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={FileText} 
+              label="Site Content" 
+              to="/adminpanel/site-content" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={Image} 
+              label="Media Library" 
+              to="/adminpanel/media" 
+              currentPath={location} 
+            />
+            
+            <h4 className="text-xs uppercase text-gray-500 font-semibold px-3 mb-2 mt-6">Community</h4>
+            <NavItem 
+              icon={UserCircle} 
+              label="Users" 
+              to="/adminpanel/users" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={Scroll} 
+              label="Prayer Requests" 
+              to="/adminpanel/prayer-requests" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={Heart} 
+              label="Volunteers" 
+              to="/adminpanel/volunteers" 
+              currentPath={location} 
+            />
+            <NavItem 
+              icon={DollarSign} 
+              label="Donations" 
+              to="/adminpanel/donations" 
+              currentPath={location} 
+            />
+          </nav>
+          
+          <div className="px-6 py-4 mt-auto border-t">
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={logout}
+            >
+              Logout
+            </Button>
           </div>
+        </div>
+        
+        {/* Main content */}
+        <div className="flex-1 overflow-auto">
+          <Switch>
+            <Route path="/adminpanel">
+              <div className="flex items-center justify-center h-full text-center p-8">
+                <div>
+                  <h1 className="text-3xl font-bold text-purple-600 mb-2">Welcome to the Admin Panel</h1>
+                  <p className="text-gray-600 mb-6">Select an option from the sidebar to manage your church website.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                    <Link href="/adminpanel/dashboard">
+                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                        <LayoutDashboard className="h-6 w-6 mb-2" />
+                        Dashboard
+                      </Button>
+                    </Link>
+                    <Link href="/adminpanel/events">
+                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                        <CalendarRange className="h-6 w-6 mb-2" />
+                        Events
+                      </Button>
+                    </Link>
+                    <Link href="/adminpanel/ministries">
+                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                        <Users className="h-6 w-6 mb-2" />
+                        Ministries
+                      </Button>
+                    </Link>
+                    <Link href="/adminpanel/sermons">
+                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                        <Headphones className="h-6 w-6 mb-2" />
+                        Sermons
+                      </Button>
+                    </Link>
+                    <Link href="/adminpanel/blog">
+                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                        <Newspaper className="h-6 w-6 mb-2" />
+                        Blog
+                      </Button>
+                    </Link>
+                    <Link href="/adminpanel/site-content">
+                      <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
+                        <FileText className="h-6 w-6 mb-2" />
+                        Site Content
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </Route>
+          </Switch>
         </div>
       </div>
     </>
