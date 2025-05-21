@@ -544,9 +544,9 @@ const DonationHistory = ({ donations, isLoading }: DonationHistoryProps) => {
             <p className="text-slate-700 text-sm mb-1">
               Donated on {formatDate(donation.createdAt)}
             </p>
-            {donation.memo && (
+            {donation.notes && (
               <p className="text-slate-600 text-sm italic">
-                Memo: {donation.memo}
+                Notes: {donation.notes}
               </p>
             )}
           </CardContent>
