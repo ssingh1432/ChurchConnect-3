@@ -1,0 +1,411 @@
+{
+  "common": {
+    "menu": {
+      "home": "Home",
+      "about": "About",
+      "ministries": "Ministries",
+      "events": "Events",
+      "sermons": "Sermons",
+      "blog": "Blog",
+      "visit": "Visit",
+      "contact": "Contact",
+      "prayerRequest": "Prayer Request",
+      "volunteer": "Volunteer",
+      "donate": "Donate",
+      "profile": "Profile",
+      "admin": "Admin",
+      "login": "Login",
+      "register": "Register",
+      "logout": "Logout"
+    },
+    "buttons": {
+      "readMore": "Read More",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "details": "View Details",
+      "back": "Back"
+    },
+    "footer": {
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "copyright": "© 2025 Grace Community Church. All Rights Reserved.",
+      "followUs": "Follow Us"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Welcome to Grace Community Church",
+      "subtitle": "A place of worship, fellowship, and community",
+      "cta": "Join Us This Sunday"
+    },
+    "services": {
+      "title": "Service Times",
+      "sunday": "Sunday Service: 9:00 AM & 11:00 AM",
+      "wednesday": "Wednesday Bible Study: 7:00 PM",
+      "friday": "Friday Prayer Meeting: 7:30 PM"
+    },
+    "welcome": {
+      "title": "Welcome to Our Church Family",
+      "description": "We are a vibrant, diverse community of believers committed to spreading the love of Christ through worship, fellowship, and service."
+    },
+    "events": {
+      "title": "Upcoming Events",
+      "viewAll": "View All Events"
+    },
+    "sermons": {
+      "title": "Latest Sermons",
+      "viewAll": "View All Sermons"
+    }
+  },
+  "about": {
+    "title": "About Our Church",
+    "mission": {
+      "title": "Our Mission",
+      "description": "To glorify God by making disciples who love God, love people, and serve the world."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "To be a community where people encounter Christ, grow in their faith, and are equipped to serve."
+    },
+    "values": {
+      "title": "Our Values",
+      "worship": "Worship",
+      "fellowship": "Fellowship",
+      "discipleship": "Discipleship",
+      "service": "Service",
+      "evangelism": "Evangelism"
+    },
+    "staff": {
+      "title": "Our Leadership Team",
+      "pastorTitle": "Senior Pastor",
+      "elderTitle": "Elder",
+      "deaconTitle": "Deacon"
+    },
+    "history": {
+      "title": "Our History",
+      "description": "Grace Community Church was founded in 1995 with a vision to reach our community with the transforming message of Jesus Christ."
+    }
+  },
+  "ministries": {
+    "title": "Our Ministries",
+    "description": "Our church offers various ministries to serve different age groups and needs within our community.",
+    "children": {
+      "title": "Children's Ministry",
+      "description": "Nurturing young hearts to know and love Jesus."
+    },
+    "youth": {
+      "title": "Youth Ministry",
+      "description": "Guiding teenagers through the journey of faith."
+    },
+    "men": {
+      "title": "Men's Ministry",
+      "description": "Building strong men of faith and character."
+    },
+    "women": {
+      "title": "Women's Ministry",
+      "description": "Encouraging women to grow in their relationship with God."
+    },
+    "worship": {
+      "title": "Worship Ministry",
+      "description": "Leading the congregation in worship and praise."
+    },
+    "outreach": {
+      "title": "Outreach Ministry",
+      "description": "Sharing God's love with our community and beyond."
+    }
+  },
+  "events": {
+    "title": "Church Events",
+    "upcoming": "Upcoming Events",
+    "past": "Past Events",
+    "details": {
+      "date": "Date",
+      "time": "Time",
+      "location": "Location",
+      "description": "Description",
+      "organizer": "Organizer",
+      "register": "Register for this Event"
+    },
+    "categories": {
+      "all": "All Events",
+      "worship": "Worship",
+      "fellowship": "Fellowship",
+      "outreach": "Outreach",
+      "special": "Special Events"
+    }
+  },
+  "sermons": {
+    "title": "Sermons",
+    "latest": "Latest Sermons",
+    "popular": "Popular Sermons",
+    "series": "Sermon Series",
+    "details": {
+      "speaker": "Speaker",
+      "date": "Date",
+      "topic": "Topic",
+      "watch": "Watch",
+      "listen": "Listen",
+      "download": "Download Notes"
+    },
+    "filters": {
+      "speaker": "Filter by Speaker",
+      "topic": "Filter by Topic",
+      "date": "Filter by Date"
+    }
+  },
+  "blog": {
+    "title": "Church Blog",
+    "latest": "Latest Posts",
+    "categories": {
+      "all": "All Posts",
+      "devotional": "Devotional",
+      "testimony": "Testimony",
+      "teaching": "Teaching",
+      "news": "Church News"
+    },
+    "readTime": "min read",
+    "author": "By",
+    "published": "Published"
+  },
+  "visit": {
+    "title": "Visit Us",
+    "address": "123 Church Street, City, State 12345",
+    "directions": "Get Directions",
+    "parking": "Parking Information",
+    "whatToExpect": {
+      "title": "What to Expect",
+      "worship": "Worship",
+      "message": "Message",
+      "fellowship": "Fellowship",
+      "children": "Children's Programs"
+    },
+    "firstTime": {
+      "title": "First Time Visitor?",
+      "description": "We'd love to meet you! Stop by our Welcome Center when you arrive."
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "subject": "Subject",
+      "message": "Message",
+      "submit": "Send Message"
+    },
+    "info": {
+      "address": "Church Address",
+      "phone": "Phone Number",
+      "email": "Email Address",
+      "hours": "Office Hours"
+    },
+    "success": "Your message has been sent successfully!",
+    "error": "There was an error sending your message. Please try again."
+  },
+  "prayer": {
+    "title": "Prayer Requests",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "request": "Prayer Request",
+      "private": "Keep this request private",
+      "submit": "Submit Prayer Request"
+    },
+    "thankyou": "Thank you for sharing your prayer request. Our prayer team will be praying for you.",
+    "prayer_team": "Join Our Prayer Team"
+  },
+  "volunteer": {
+    "title": "Volunteer Opportunities",
+    "description": "Serve alongside us in ministry! There are many ways to get involved.",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "ministry": "Ministry Interest",
+      "experience": "Previous Experience (optional)",
+      "availability": "Availability",
+      "submit": "Submit Application"
+    },
+    "thankyou": "Thank you for your interest in volunteering! We'll contact you soon.",
+    "areas": {
+      "title": "Areas to Serve",
+      "worship": "Worship Team",
+      "children": "Children's Ministry",
+      "youth": "Youth Ministry",
+      "welcome": "Welcome Team",
+      "tech": "Tech Team",
+      "outreach": "Outreach"
+    }
+  },
+  "donate": {
+    "title": "Support Our Church",
+    "description": "Your generous giving helps us continue our ministry and outreach.",
+    "form": {
+      "amount": "Amount",
+      "frequency": "Frequency",
+      "project": "Project (Optional)",
+      "method": "Payment Method",
+      "name": "Name",
+      "email": "Email",
+      "notes": "Notes (Optional)",
+      "submit": "Proceed to Payment"
+    },
+    "frequency": {
+      "onetime": "One-time",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "annually": "Annually"
+    },
+    "projects": {
+      "general": "General Fund",
+      "missions": "Missions",
+      "building": "Building Fund",
+      "outreach": "Outreach Programs",
+      "youth": "Youth Ministry"
+    },
+    "methods": {
+      "card": "Credit/Debit Card",
+      "bank": "Bank Transfer",
+      "paypal": "PayPal",
+      "other": "Other"
+    },
+    "thankyou": "Thank you for your generous donation!",
+    "history": "Donation History"
+  },
+  "profile": {
+    "title": "My Profile",
+    "personal": {
+      "title": "Personal Information",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "update": "Update Information"
+    },
+    "password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "update": "Update Password"
+    },
+    "activity": {
+      "title": "My Activity",
+      "donations": "My Donations",
+      "prayers": "My Prayer Requests",
+      "volunteer": "My Volunteer Activities"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Register",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Register",
+      "haveAccount": "Already have an account?",
+      "login": "Login"
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "email": "Email",
+      "submit": "Send Reset Link",
+      "login": "Back to Login"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "stats": {
+        "members": "Total Members",
+        "events": "Upcoming Events",
+        "donations": "Monthly Donations",
+        "prayers": "New Prayer Requests"
+      }
+    },
+    "events": {
+      "title": "Manage Events",
+      "add": "Add Event",
+      "edit": "Edit Event",
+      "delete": "Delete Event"
+    },
+    "sermons": {
+      "title": "Manage Sermons",
+      "add": "Add Sermon",
+      "edit": "Edit Sermon",
+      "delete": "Delete Sermon"
+    },
+    "blog": {
+      "title": "Manage Blog",
+      "add": "Add Post",
+      "edit": "Edit Post",
+      "delete": "Delete Post"
+    },
+    "users": {
+      "title": "Manage Users",
+      "add": "Add User",
+      "edit": "Edit User",
+      "delete": "Delete User"
+    },
+    "prayer": {
+      "title": "Prayer Requests",
+      "view": "View Requests",
+      "mark": "Mark as Answered"
+    },
+    "volunteers": {
+      "title": "Volunteer Applications",
+      "view": "View Applications",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "donations": {
+      "title": "Donations",
+      "view": "View Donations",
+      "report": "Generate Report"
+    },
+    "content": {
+      "title": "Site Content",
+      "edit": "Edit Content",
+      "sections": {
+        "home": "Homepage",
+        "about": "About Page",
+        "contact": "Contact Info"
+      }
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you are looking for does not exist.",
+      "home": "Go to Homepage"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end. Please try again later.",
+      "contact": "Contact Support"
+    },
+    "forbidden": {
+      "title": "Access Denied",
+      "message": "You do not have permission to access this page.",
+      "login": "Login",
+      "home": "Go to Homepage"
+    }
+  }
+}
