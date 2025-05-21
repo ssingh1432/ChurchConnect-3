@@ -45,10 +45,14 @@ interface ModalContextProps {
   hideModal: (modal: keyof ModalState) => void;
 }
 
-export const ModalContext = React.createContext<ModalContextProps>({
+// Create context for modal management
+const ModalContext = React.createContext<ModalContextProps>({
   showModal: () => {},
   hideModal: () => {},
 });
+
+// Export for use in other components
+export { ModalContext };
 
 function ProtectedRoute({ component: Component, adminRequired = false }) {
   const { isAuthenticated, isAdmin, loading } = useAuth();
@@ -82,11 +86,23 @@ function Router() {
       <Route path="/prayer-request" component={PrayerRequestPage} />
       <Route path="/volunteer" component={VolunteerPage} />
       <Route path="/donate" component={DonatePage} />
-      
+      <Route path="/login" component={() => {
+        const { showModal } = React.useContext(ModalContext);
+        React.useEffect(() => {
+          showModal('login');
+        }, []);
+        return <HomePage />;
+      }} />
+      <Route path="/register" component={() => {
+        const { showModal } = React.useContext(ModalContext);
+        React.useEffect(() => {
+          showModal('register');
+        }, []);
+        return <HomePage />;
+      }} />
       <Route path="/profile">
         <ProtectedRoute component={ProfilePage} />
       </Route>
-      
       <Route path="/admin">
         <ProtectedRoute component={AdminLayout} adminRequired={true} />
       </Route>
@@ -123,7 +139,6 @@ function Router() {
       <Route path="/admin/site-content">
         <ProtectedRoute component={SiteContentEditor} adminRequired={true} />
       </Route>
-      
       <Route component={NotFound} />
     </Switch>
   );

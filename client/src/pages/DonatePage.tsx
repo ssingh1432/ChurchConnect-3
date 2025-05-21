@@ -38,8 +38,8 @@ const donationFormSchema = z.object({
   amount: z.string().min(1, { message: "Amount is required" }),
   frequency: z.string().min(1, { message: "Frequency is required" }),
   paymentMethod: z.string().min(1, { message: "Payment method is required" }),
-  category: z.string().optional(),
-  memo: z.string().optional(),
+  project: z.string().default("general"),
+  notes: z.string().optional(),
 });
 
 type DonationForm = z.infer<typeof donationFormSchema>;
@@ -65,8 +65,8 @@ const DonatePage = () => {
       amount: "",
       frequency: "one-time",
       paymentMethod: "credit-card",
-      category: "general",
-      memo: "",
+      project: "general",
+      notes: "",
     },
   });
 
@@ -89,8 +89,8 @@ const DonatePage = () => {
         amount: "",
         frequency: "one-time",
         paymentMethod: "credit-card",
-        category: "general",
-        memo: "",
+        project: "general",
+        notes: "",
       });
       // Refresh user donations if authenticated
       if (isAuthenticated) {
