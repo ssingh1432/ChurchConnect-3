@@ -125,7 +125,7 @@ const AdminLayout: React.FC = () => {
             <NavItem 
               icon={LayoutDashboard} 
               label="Dashboard" 
-              to="/adminpanel/dashboard" 
+              to="/admin/dashboard" 
               currentPath={location} 
             />
             
@@ -133,37 +133,37 @@ const AdminLayout: React.FC = () => {
             <NavItem 
               icon={CalendarRange} 
               label="Events" 
-              to="/adminpanel/events" 
+              to="/admin/events" 
               currentPath={location} 
             />
             <NavItem 
               icon={Users} 
               label="Ministries" 
-              to="/adminpanel/ministries" 
+              to="/admin/ministries" 
               currentPath={location} 
             />
             <NavItem 
               icon={Headphones} 
               label="Sermons" 
-              to="/adminpanel/sermons" 
+              to="/admin/sermons" 
               currentPath={location} 
             />
             <NavItem 
               icon={Newspaper} 
               label="Blog Posts" 
-              to="/adminpanel/blog" 
+              to="/admin/blog" 
               currentPath={location} 
             />
             <NavItem 
               icon={FileText} 
               label="Site Content" 
-              to="/adminpanel/site-content" 
+              to="/admin/site-content" 
               currentPath={location} 
             />
             <NavItem 
               icon={Image} 
               label="Media Library" 
-              to="/adminpanel/media" 
+              to="/admin/media" 
               currentPath={location} 
             />
             
@@ -171,25 +171,25 @@ const AdminLayout: React.FC = () => {
             <NavItem 
               icon={UserCircle} 
               label="Users" 
-              to="/adminpanel/users" 
+              to="/admin/users" 
               currentPath={location} 
             />
             <NavItem 
               icon={Scroll} 
               label="Prayer Requests" 
-              to="/adminpanel/prayer-requests" 
+              to="/admin/prayer-requests" 
               currentPath={location} 
             />
             <NavItem 
               icon={Heart} 
               label="Volunteers" 
-              to="/adminpanel/volunteers" 
+              to="/admin/volunteers" 
               currentPath={location} 
             />
             <NavItem 
               icon={DollarSign} 
               label="Donations" 
-              to="/adminpanel/donations" 
+              to="/admin/donations" 
               currentPath={location} 
             />
           </nav>
@@ -207,43 +207,43 @@ const AdminLayout: React.FC = () => {
         
         {/* Main content */}
         <div className="flex-1 overflow-auto">
-          {location === "/adminpanel" ? (
+          {location === "/admin" ? (
             <div className="flex items-center justify-center h-full text-center p-8">
               <div>
                 <h1 className="text-3xl font-bold text-purple-600 mb-2">Welcome to the Admin Panel</h1>
                 <p className="text-gray-600 mb-6">Select an option from the sidebar to manage your church website.</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                  <Link href="/adminpanel/dashboard">
+                  <Link href="/admin/dashboard">
                     <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
                       <LayoutDashboard className="h-6 w-6 mb-2" />
                       Dashboard
                     </Button>
                   </Link>
-                  <Link href="/adminpanel/events">
+                  <Link href="/admin/events">
                     <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
                       <CalendarRange className="h-6 w-6 mb-2" />
                       Events
                     </Button>
                   </Link>
-                  <Link href="/adminpanel/ministries">
+                  <Link href="/admin/ministries">
                     <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
                       <Users className="h-6 w-6 mb-2" />
                       Ministries
                     </Button>
                   </Link>
-                  <Link href="/adminpanel/sermons">
+                  <Link href="/admin/sermons">
                     <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
                       <Headphones className="h-6 w-6 mb-2" />
                       Sermons
                     </Button>
                   </Link>
-                  <Link href="/adminpanel/blog">
+                  <Link href="/admin/blog">
                     <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
                       <Newspaper className="h-6 w-6 mb-2" />
                       Blog
                     </Button>
                   </Link>
-                  <Link href="/adminpanel/site-content">
+                  <Link href="/admin/site-content">
                     <Button variant="outline" className="w-full h-24 flex flex-col justify-center">
                       <FileText className="h-6 w-6 mb-2" />
                       Site Content
@@ -254,17 +254,17 @@ const AdminLayout: React.FC = () => {
             </div>
           ) : (
             <div className="p-6 overflow-auto">
-              {location === "/adminpanel/dashboard" && <Dashboard />}
-              {location === "/adminpanel/events" && <EventManager />}
-              {location === "/adminpanel/ministries" && <MinistryManager />}
-              {location === "/adminpanel/sermons" && <SermonManager />}
-              {location === "/adminpanel/blog" && <BlogManager />}
-              {location === "/adminpanel/prayer-requests" && <PrayerRequestManager />}
-              {location === "/adminpanel/volunteers" && <VolunteerManager />}
-              {location === "/adminpanel/donations" && <DonationManager />}
-              {location === "/adminpanel/site-content" && <SiteContentEditor />}
-              {location === "/adminpanel/media" && <MediaManager />}
-              {location === "/adminpanel/users" && <UserManager />}
+              {location === "/admin/dashboard" && <Dashboard />}
+              {location === "/admin/events" && <EventManager />}
+              {location === "/admin/ministries" && <MinistryManager />}
+              {location === "/admin/sermons" && <SermonManager />}
+              {location === "/admin/blog" && <BlogManager />}
+              {location === "/admin/prayer-requests" && <PrayerRequestManager />}
+              {location === "/admin/volunteers" && <VolunteerManager />}
+              {location === "/admin/donations" && <DonationManager />}
+              {location === "/admin/site-content" && <SiteContentEditor />}
+              {location === "/admin/media" && <MediaManager />}
+              {location === "/admin/users" && <UserManager />}
             </div>
           )}
         </div>

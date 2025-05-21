@@ -87,40 +87,40 @@ function Router() {
         <ProtectedRoute component={ProfilePage} />
       </Route>
       
-      <Route path="/adminpanel">
+      <Route path="/admin">
         <ProtectedRoute component={AdminLayout} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/dashboard">
+      <Route path="/admin/dashboard">
         <ProtectedRoute component={Dashboard} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/events">
+      <Route path="/admin/events">
         <ProtectedRoute component={EventManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/ministries">
+      <Route path="/admin/ministries">
         <ProtectedRoute component={MinistryManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/sermons">
+      <Route path="/admin/sermons">
         <ProtectedRoute component={SermonManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/blog">
+      <Route path="/admin/blog">
         <ProtectedRoute component={BlogManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/users">
+      <Route path="/admin/users">
         <ProtectedRoute component={UserManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/prayer-requests">
+      <Route path="/admin/prayer-requests">
         <ProtectedRoute component={PrayerRequestManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/volunteers">
+      <Route path="/admin/volunteers">
         <ProtectedRoute component={VolunteerManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/media">
+      <Route path="/admin/media">
         <ProtectedRoute component={MediaManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/donations">
+      <Route path="/admin/donations">
         <ProtectedRoute component={DonationManager} adminRequired={true} />
       </Route>
-      <Route path="/adminpanel/site-content">
+      <Route path="/admin/site-content">
         <ProtectedRoute component={SiteContentEditor} adminRequired={true} />
       </Route>
       
