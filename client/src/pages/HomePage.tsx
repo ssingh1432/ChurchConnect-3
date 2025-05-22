@@ -14,7 +14,7 @@ const HomePage = () => {
   return (
     <>
       <Helmet>
-        <title>Grace Community Church - A Place of Faith, Family & Community</title>
+        <title>Bishram Ekata Mandali - A Place of Faith, Family & Community</title>
         <meta 
           name="description" 
           content="Welcome to Grace Community Church. Join us for worship, fellowship, and spiritual growth. Sunday services at 9:00 AM & 11:00 AM."

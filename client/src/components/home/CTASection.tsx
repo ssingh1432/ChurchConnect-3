@@ -28,7 +28,7 @@ const CTASection = () => {
               href="/visit"
               className="bg-white text-slate-900 hover:bg-slate-100 px-6 py-3 rounded-md font-medium transition-colors"
             >
-              Join Us This Sunday
+              Join Us This Saturday
             </Link>
             <Link
               href="/visit"

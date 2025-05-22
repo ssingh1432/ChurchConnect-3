@@ -75,9 +75,9 @@ const ConnectSection = () => {
             </div>
             <h3 className="text-xl font-bold mb-2">Service Times</h3>
             <p className="text-slate-700 mb-4">
-              Sunday Morning: 9:00 AM & 11:00 AM<br />
-              Youth Service: Fridays at 6:30 PM<br />
-              Bible Study: Wednesdays at 7:00 PM
+              Saturday Morning: 10:00 AM & 11:00 AM<br />
+              Sabbath Service: 11:00 AM & 2:00 PM<br />
+              Home Fellowsship: Wednesdays at 00:00 PM
             </p>
             <Link
               href="/visit"

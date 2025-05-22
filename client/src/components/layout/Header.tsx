@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/components/ThemeProvider";
 import { Moon, Sun, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,6 +25,7 @@ const Header = () => {
   const { isAuthenticated, user, logout, isAdmin } = useAuth();
   const [location] = useLocation();
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +59,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link href="/" className="text-xl font-bold flex items-center gap-2">
           <i className="fas fa-church text-purple-400"></i>
-          <span>Grace Community Church</span>
+          <span>Bishram Ekata Mandali</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -67,7 +70,7 @@ const Header = () => {
               location === "/" ? "text-purple-400" : ""
             }`}
           >
-            Home
+            {t('common.menu.home')}
           </Link>
           <Link
             href="/about"
@@ -75,7 +78,7 @@ const Header = () => {
               location === "/about" ? "text-purple-400" : ""
             }`}
           >
-            About
+            {t('common.menu.about')}
           </Link>
           <Link
             href="/ministries"
@@ -83,7 +86,7 @@ const Header = () => {
               location === "/ministries" ? "text-purple-400" : ""
             }`}
           >
-            Ministries
+            {t('common.menu.ministries')}
           </Link>
           <Link
             href="/events"
@@ -91,7 +94,7 @@ const Header = () => {
               location === "/events" ? "text-purple-400" : ""
             }`}
           >
-            Events
+            {t('common.menu.events')}
           </Link>
           <Link
             href="/sermons"
@@ -99,7 +102,7 @@ const Header = () => {
               location === "/sermons" ? "text-purple-400" : ""
             }`}
           >
-            Sermons
+            {t('common.menu.sermons')}
           </Link>
           <Link
             href="/blog"
@@ -107,7 +110,7 @@ const Header = () => {
               location === "/blog" ? "text-purple-400" : ""
             }`}
           >
-            Blog
+            {t('common.menu.blog')}
           </Link>
           <Link
             href="/contact"
@@ -115,7 +118,7 @@ const Header = () => {
               location === "/contact" ? "text-purple-400" : ""
             }`}
           >
-            Contact
+            {t('common.menu.contact')}
           </Link>
           <Link
             href="/donate"
@@ -123,7 +126,7 @@ const Header = () => {
               location === "/donate" ? "text-purple-400" : ""
             }`}
           >
-            Give
+            {t('common.menu.donate')}
           </Link>
         </nav>
 

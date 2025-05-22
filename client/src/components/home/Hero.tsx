@@ -11,7 +11,7 @@ const Hero = () => {
   const content = siteContent
     ? JSON.parse(siteContent.content)
     : {
-        title: "Welcome to Grace Community Church",
+        title: "Welcome to Bishram Ekata Mandali",
         subtitle: "A place to find faith, family, and community.",
         image: "https://images.unsplash.com/photo-1514896856000-91cb6de818e0"
       };
